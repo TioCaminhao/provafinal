@@ -45,3 +45,25 @@ class NoticiaFilterForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
   
+class CategoriaForm(forms.ModelForm):
+    class Meta:
+        model = Categoria
+        fields = ['nome'] 
+        widgets = {
+            'nome': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Digite o nome da categoria'
+            }),
+        }
+        labels = {
+            'nome': 'Nome da Categoria',
+        }
+
+    def clean_nome(self):
+        nome = self.cleaned_data.get('nome')
+        if Categoria.objects.filter(nome=nome).exists():
+            raise forms.ValidationError('Uma categoria com este nome já existe.')
+        return nome
+    
+class FiltroCategoriaForm(forms.Form):
+    nome = forms.CharField(required=False, label='Nome', max_length=100)

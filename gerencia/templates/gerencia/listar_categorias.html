@@ -1,0 +1,81 @@
+{% extends 'base_gerencia.html' %}
+
+{% block main %}
+
+
+    <h1 class="h3 mb-2 text-gray-800">Gerenciar Categorias</h1>
+    <p class="mb-4">Aqui você pode editar ou remover as categorias existentes.</p>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtrar Categorias</h6>
+        </div>
+        <div class="card-body">
+            <form method="get">
+                <div class="form-group mb-3">
+                    <label for="nome">Nome da Categoria</label>
+                    {{ formularioFiltro.nome }}
+                </div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Cadastrar Nova Categoria</h6>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="nome">Nome da Categoria</label>
+                    {{ form.nome }}
+                </div>
+                <button type="submit" class="btn btn-success">Criar Categoria</button>
+            </form>
+        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Listagem de Categorias</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Nome da Categoria</th>
+                            <th style="width: 20%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for categoria in categorias %}
+                        <tr>
+                            <td>{{ categoria.nome }}</td>
+                            <td>
+                                <a href="{% url 'gerencia:editar_categoria' categoria.id %}" class="btn btn-warning btn-sm">Editar</a>
+                                <a href="{% url 'gerencia:excluir_categoria' categoria.id %}" class="btn btn-danger btn-sm">Remover</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if editar %}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Editar Categoria</h6>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'gerencia:editar_categoria' categoria.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
